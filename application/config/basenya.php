@@ -1,0 +1,1 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');$config['database_host']='127.0.0.1';$config['database_user']='u232810153_gbookdb';$config['database_pass']='Dbgbk047';$config['database_name']='u232810153_gbook';

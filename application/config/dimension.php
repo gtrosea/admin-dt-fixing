@@ -1,0 +1,1 @@
+<?php defined('BASEPATH') or exit('No direct script access allowed');$config['hg']='partner@daftartamu.id';$config['wd']='c562220755';$config['lg']='https://admin.daftartamu.id/';

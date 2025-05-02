@@ -1,0 +1,166 @@
+body {
+  background-color: rgb(218, 218, 218);
+  color           : rgb(34, 34, 34);
+  font-family     : 'Lato', sans-serif;
+  overflow-x      : hidden;
+}
+
+.row {
+  display  : flex;
+  flex-wrap: wrap;
+}
+
+.col-6 {
+  flex     : 0 0 50%;
+  max-width: 50%;
+}
+
+.col-4 {
+  flex     : 0 0 40%;
+  max-width: 40%;
+}
+
+.col-8 {
+  flex     : 0 0 60%;
+  max-width: 60%;
+}
+
+.col-12 {
+  flex     : 0 0 100%;
+  max-width: 100%;
+}
+
+
+.container {
+  margin-left : auto;
+  margin-right: auto;
+}
+
+.holder {
+  background-color: #fff;
+  padding         : 10px;
+}
+
+.figure {
+  position: relative;
+  margin  : -10px -10px 0px -10px;
+}
+
+.figure img {
+  max-width: 100%;
+}
+
+.figure span.line1 {
+  position        : absolute;
+  bottom          : 3px;
+  left            : 0px;
+  right           : 0px;
+  display         : block;
+  padding         : 10px 10px 10px 75px;
+  height          : 60px;
+  background-color: rgba(0, 0, 0, 0.808);
+}
+
+.line1 span {
+  color  : #fff;
+  display: block;
+}
+
+.line1 span#wd {
+  font-size  : 12px;
+  font-style : italic;
+  font-weight: 10;
+}
+
+.line1 span#mt {
+  font-size  : 19px;
+  font-weight: 600;
+}
+
+.line1 span#dt {
+  font-size  : 13px;
+  font-weight: 600;
+}
+
+.figure span.orn {
+  position     : absolute;
+  bottom       : 20px;
+  left         : 20px;
+  height       : 0px;
+  width        : 0px;
+  border-top   : solid 43px #fff;
+  border-bottom: solid 20px transparent;
+  border-left  : solid 20px #fff;
+  border-right : solid 20px #fff;
+}
+
+.figure span.ornimg {
+  position: absolute;
+  bottom  : 20px;
+  left    : 20px;
+}
+
+.figure span.ornimg img {
+  width : 39px;
+  height: 61px;
+}
+
+.row span {
+  font-size: 14px;
+}
+
+.row h1 {
+  font-size    : 18px;
+  font-weight  : 900;
+  margin-top   : 10px;
+  margin-bottom: 10px;
+  color        : black;
+}
+
+.row #kpd {
+  margin-top: 40px;
+  display   : inline-block;
+}
+
+.row .qr {
+  width: 100%;
+  float: right;
+}
+
+.mt-2 {
+  margin-top: 60px !important;
+  color     : black;
+}
+
+.row #ket {
+  font-size  : 13px;
+  font-weight: 700;
+}
+
+.footer {
+  text-align      : center;
+  background-color: black;
+  padding         : 10px;
+  margin          : 30px -10px -10px -10px;
+  color           : #fff;
+  font-weight     : 900;
+  font-size       : 14px;
+}
+
+#btn-Convert-Html2Image {
+  display         : block;
+  text-align      : center;
+  font-size       : 16px;
+  text-decoration : none;
+  margin-top      : 10px;
+  background-color: #019689;
+  color           : #ffffff;
+  padding         : 10px;
+  box-shadow      : 1px 1px 5px rgb(90, 90, 90);
+  margin-bottom   : 100px;
+}
+
+#btn-Convert-Html2Image img {
+  height      : 17px;
+  margin-right: 10px;
+}
