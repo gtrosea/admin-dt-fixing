@@ -357,6 +357,10 @@
   /* height: 300px; */
 }
 
+.webcamQr #reader span {
+  margin: 0 !important;
+}
+
 .webcamQr .lbl {
   position: absolute;
   opacity: 0.5;
@@ -415,6 +419,10 @@
   right: 0;
   border-bottom: solid #00ff7b 5px;
   border-right: solid #00ff7b 5px;
+}
+
+.reader__dashboard_section {
+  padding: 16px;
 }
 
 .html5-qrcode-element {
