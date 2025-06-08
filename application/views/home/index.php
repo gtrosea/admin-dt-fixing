@@ -797,66 +797,106 @@ $('.modal#hadirTamu2 .kehadiran .btnsubmitjml').click(function(e) {
 
 
 <script type="text/javascript">
-var arg = {
-  resultFunction: function(result) {
-
-    var kod = result.code;
-
-    $.ajax({
-      url: "<?= base_url('home/chekcode') ?>",
-      type: "POST",
-      dataType: "JSON",
-      data: {
-        barcode: result.code
-      },
-      cache: false,
-      success: function(respon) {
-        if (respon.kode == 1) {
-          $('.modal#modalWebcamHome').modal('hide');
-          $('.modal#hadirTamu2').modal('show');
-          $('.modal#hadirTamu2 input#nama').val(kod);
-          $('.modal#cariTamu2').modal('hide');
-          return false;
-        }
-        if (respon.kode == 3) {
-          $('.webcamQr span.warning').fadeIn();
-          $('.webcamQr span.warning').html('QrCode Salah, Ulangi.!');
-          $('.webcamQr span.warning').css('color', '#ff0000');
-
-          setTimeout(function() {
-            $('.webcamQr span.warning').fadeOut("slow");
-          }, 800);
-          return false;
-        }
-        if (respon.kode == 0) {
-          console.log('ok');
-          return false;
-        }
-        if (respon.kode == 2) {
-          $('.webcamQr span.warning').fadeIn();
-          $('.webcamQr span.warning').html('Tamu sudah Check-in');
-          $('.webcamQr span.warning').css('color', '#ffa52c');
-
-          setTimeout(function() {
-            $('.webcamQr span.warning').fadeOut("slow");
-          }, 800);
-
-          setTimeout(function() {
-            $('.modal#modalWebcamHome').modal('hide');
-          }, 3000);
-          return false;
-        }
+// Tambahkan fungsi untuk meminta izin kamera
+async function requestCameraPermission() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: {
+        facingMode: "environment"
       }
     });
-
+    stream.getTracks().forEach(track => track.stop()); // Stop stream setelah mendapatkan izin
+    return true;
+  } catch (err) {
+    console.error('Error accessing camera:', err);
+    alert('Tidak dapat mengakses kamera. Pastikan Anda telah memberikan izin akses kamera di browser Anda.');
+    return false;
   }
-};
-var decoder = new WebCodeCamJS("#webcodecam-canvas").buildSelectMenu("#camera-select", "user|front").init(arg)
-  .play();
+}
 
-document.querySelector("#camera-select").addEventListener("change", function() {
-  if (decoder.isInitialized()) {
-    decoder.stop().play();
+// Fungsi untuk menginisialisasi kamera
+async function initializeCamera() {
+  const hasPermission = await requestCameraPermission();
+  if (!hasPermission) return;
+
+  var arg = {
+    resultFunction: function(result) {
+      var kod = result.code;
+      $.ajax({
+        url: "<?= base_url('home/chekcode') ?>",
+        type: "POST",
+        dataType: "JSON",
+        data: {
+          barcode: result.code
+        },
+        cache: false,
+        success: function(respon) {
+          if (respon.kode == 1) {
+            $('.modal#modalWebcamHome').modal('hide');
+            $('.modal#hadirTamu2').modal('show');
+            $('.modal#hadirTamu2 input#nama').val(kod);
+            $('.modal#cariTamu2').modal('hide');
+            return false;
+          }
+          if (respon.kode == 3) {
+            $('.webcamQr span.warning').fadeIn();
+            $('.webcamQr span.warning').html('QrCode Salah, Ulangi.!');
+            $('.webcamQr span.warning').css('color', '#ff0000');
+
+            setTimeout(function() {
+              $('.webcamQr span.warning').fadeOut("slow");
+            }, 800);
+            return false;
+          }
+          if (respon.kode == 0) {
+            console.log('ok');
+            return false;
+          }
+          if (respon.kode == 2) {
+            $('.webcamQr span.warning').fadeIn();
+            $('.webcamQr span.warning').html('Tamu sudah Check-in');
+            $('.webcamQr span.warning').css('color', '#ffa52c');
+
+            setTimeout(function() {
+              $('.webcamQr span.warning').fadeOut("slow");
+            }, 800);
+
+            setTimeout(function() {
+              $('.modal#modalWebcamHome').modal('hide');
+            }, 3000);
+            return false;
+          }
+        }
+      });
+    }
+  };
+
+  try {
+    var decoder = new WebCodeCamJS("#webcodecam-canvas")
+      .buildSelectMenu("#camera-select", "environment|back")
+      .init(arg)
+      .play();
+
+    document.querySelector("#camera-select").addEventListener("change", function() {
+      if (decoder.isInitialized()) {
+        decoder.stop().play();
+      }
+    });
+  } catch (err) {
+    console.error('Error initializing camera:', err);
+    alert('Terjadi kesalahan saat menginisialisasi kamera. Silakan refresh halaman dan coba lagi.');
+  }
+}
+
+// Jalankan inisialisasi kamera saat modal dibuka
+$('#modalWebcamHome').on('shown.bs.modal', function () {
+  initializeCamera();
+});
+
+// Hentikan kamera saat modal ditutup
+$('#modalWebcamHome').on('hidden.bs.modal', function () {
+  if (typeof decoder !== 'undefined' && decoder.isInitialized()) {
+    decoder.stop();
   }
 });
 </script>
