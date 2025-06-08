@@ -879,7 +879,7 @@ async function initializeCamera() {
 
     document.querySelector("#camera-select").addEventListener("change", function() {
       if (decoder.isInitialized()) {
-        decoder.stop().play();
+        decoder.play();
       }
     });
   } catch (err) {
