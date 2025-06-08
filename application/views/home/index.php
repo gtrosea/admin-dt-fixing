@@ -851,7 +851,7 @@ var arg = {
 
   }
 };
-var decoder = new WebCodeCamJS("#webcodecam-canvas").buildSelectMenu("#camera-select", "environment|back").init(arg)
+var decoder = new WebCodeCamJS("#webcodecam-canvas").buildSelectMenu("#camera-select", "user|front").init(arg)
   .play();
 
 document.querySelector("#camera-select").addEventListener("change", function() {
