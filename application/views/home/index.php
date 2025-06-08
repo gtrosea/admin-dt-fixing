@@ -349,7 +349,8 @@
   display: inline-block;
 }
 
-.webcamQr #webcodecam-canvas {
+.webcamQr #webcodecam-canvas, 
+.webcamQr #reader {
   background-color: #272727d2;
   width: 100%;
   height: 300px;
@@ -431,7 +432,10 @@
 
             <div class="webcamQr">
               <div class="well" style="position: relative;display: inline-block;">
-                <canvas id="webcodecam-canvas"></canvas>
+                <!-- <canvas id="webcodecam-canvas"></canvas> -->
+
+                <div style="width: 500px" id="reader"></div>
+
                 <div class="scanner-laser laser-rightBottom" style="opacity: 0.5;"></div>
                 <div class="scanner-laser laser-rightTop" style="opacity: 0.5;"></div>
                 <div class="scanner-laser laser-leftBottom" style="opacity: 0.5;"></div>
@@ -457,6 +461,7 @@
 
 <script type="text/javascript" src="<?= base_url('guestbook/') ?>assets/js/qrcodelib.js"></script>
 <script type="text/javascript" src="<?= base_url('guestbook/') ?>assets/js/webcodecamjs.js"></script>
+<script type="text/javascript" src="<?= base_url('guestbook/') ?>assets/js/html5-qrcode.min.js"></script>
 <!-- <script type="text/javascript" src="<?= base_url('guestbook/') ?>assets/js/mainjqueryQr.js"></script> -->
 
 
@@ -819,70 +824,81 @@ async function initializeCamera() {
   const hasPermission = await requestCameraPermission();
   if (!hasPermission) return;
 
-  var arg = {
-    resultFunction: function(result) {
-      var kod = result.code;
-      $.ajax({
-        url: "<?= base_url('home/chekcode') ?>",
-        type: "POST",
-        dataType: "JSON",
-        data: {
-          barcode: result.code
-        },
-        cache: false,
-        success: function(respon) {
-          if (respon.kode == 1) {
-            $('.modal#modalWebcamHome').modal('hide');
-            $('.modal#hadirTamu2').modal('show');
-            $('.modal#hadirTamu2 input#nama').val(kod);
-            $('.modal#cariTamu2').modal('hide');
-            return false;
-          }
-          if (respon.kode == 3) {
-            $('.webcamQr span.warning').fadeIn();
-            $('.webcamQr span.warning').html('QrCode Salah, Ulangi.!');
-            $('.webcamQr span.warning').css('color', '#ff0000');
+  // var arg = {
+  //   resultFunction: function(result) {
+  //     var kod = result.code;
+  //     $.ajax({
+  //       url: "<?= base_url('home/chekcode') ?>",
+  //       type: "POST",
+  //       dataType: "JSON",
+  //       data: {
+  //         barcode: result.code
+  //       },
+  //       cache: false,
+  //       success: function(respon) {
+  //         if (respon.kode == 1) {
+  //           $('.modal#modalWebcamHome').modal('hide');
+  //           $('.modal#hadirTamu2').modal('show');
+  //           $('.modal#hadirTamu2 input#nama').val(kod);
+  //           $('.modal#cariTamu2').modal('hide');
+  //           return false;
+  //         }
+  //         if (respon.kode == 3) {
+  //           $('.webcamQr span.warning').fadeIn();
+  //           $('.webcamQr span.warning').html('QrCode Salah, Ulangi.!');
+  //           $('.webcamQr span.warning').css('color', '#ff0000');
 
-            setTimeout(function() {
-              $('.webcamQr span.warning').fadeOut("slow");
-            }, 800);
-            return false;
-          }
-          if (respon.kode == 0) {
-            console.log('ok');
-            return false;
-          }
-          if (respon.kode == 2) {
-            $('.webcamQr span.warning').fadeIn();
-            $('.webcamQr span.warning').html('Tamu sudah Check-in');
-            $('.webcamQr span.warning').css('color', '#ffa52c');
+  //           setTimeout(function() {
+  //             $('.webcamQr span.warning').fadeOut("slow");
+  //           }, 800);
+  //           return false;
+  //         }
+  //         if (respon.kode == 0) {
+  //           console.log('ok');
+  //           return false;
+  //         }
+  //         if (respon.kode == 2) {
+  //           $('.webcamQr span.warning').fadeIn();
+  //           $('.webcamQr span.warning').html('Tamu sudah Check-in');
+  //           $('.webcamQr span.warning').css('color', '#ffa52c');
 
-            setTimeout(function() {
-              $('.webcamQr span.warning').fadeOut("slow");
-            }, 800);
+  //           setTimeout(function() {
+  //             $('.webcamQr span.warning').fadeOut("slow");
+  //           }, 800);
 
-            setTimeout(function() {
-              $('.modal#modalWebcamHome').modal('hide');
-            }, 3000);
-            return false;
-          }
-        }
-      });
-    }
+  //           setTimeout(function() {
+  //             $('.modal#modalWebcamHome').modal('hide');
+  //           }, 3000);
+  //           return false;
+  //         }
+  //       }
+  //     });
+  //   }
+  // };
+
+  var html5QrcodeScanner = new Html5QrcodeScanner("reader", { fps: 10, qrbox: 250 });
+
+  function onScanSuccess(decodedText, decodedResult) {
+      // Handle on success condition with the decoded text or result.
+      alert(`Scan result: ${decodedText}`, decodedResult);
+      
+      html5QrcodeScanner.clear();
   };
 
   try {
-    var decoder = new WebCodeCamJS("#webcodecam-canvas")
-      .buildSelectMenu("#camera-select", "environment|back")
-      .init(arg)
-      .play();
+    // var decoder = new WebCodeCamJS("#webcodecam-canvas")
+    //   .buildSelectMenu("#camera-select", "environment|back")
+    //   .init(arg)
+    //   .play();
 
-    document.querySelector("#camera-select").addEventListener("change", function() {
-      if (decoder.isInitialized()) {
-        decoder.stop();
-        decoder.play();
-      }
-    });
+    // document.querySelector("#camera-select").addEventListener("change", function() {
+    //   if (decoder.isInitialized()) {
+    //     decoder.stop();
+    //     decoder.play();
+    //   }
+    // });
+
+    html5QrcodeScanner.render(onScanSuccess);
   } catch (err) {
     console.error('Error initializing camera:', err);
     alert('Terjadi kesalahan saat menginisialisasi kamera. Silakan refresh halaman dan coba lagi.');
