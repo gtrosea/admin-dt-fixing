@@ -351,9 +351,9 @@
 
 .webcamQr #webcodecam-canvas, 
 .webcamQr #reader {
-  background-color: #272727d2;
+  /* background-color: #272727d2; */
   width: 100%;
-  height: 300px;
+  /* height: 300px; */
 }
 
 .webcamQr .lbl {
@@ -426,23 +426,23 @@
         <div class="row">
           <div class="col-md-12">
 
-            <div class="form-group">
+            <!-- <div class="form-group">
               <select class="form-control" id="camera-select"></select>
-            </div>
+            </div> -->
 
             <div class="webcamQr">
               <div class="well" style="position: relative;display: inline-block;">
+                <div id="reader"></div>
+                
+                
                 <!-- <canvas id="webcodecam-canvas"></canvas> -->
-
-                <div style="width: 500px" id="reader"></div>
-
-                <div class="scanner-laser laser-rightBottom" style="opacity: 0.5;"></div>
+                <!-- <div class="scanner-laser laser-rightBottom" style="opacity: 0.5;"></div>
                 <div class="scanner-laser laser-rightTop" style="opacity: 0.5;"></div>
                 <div class="scanner-laser laser-leftBottom" style="opacity: 0.5;"></div>
                 <div class="scanner-laser laser-leftTop" style="opacity: 0.5;"></div>
 
                 <span class="lbl">Scan Qrcode</span>
-                <span class="warning"></span>
+                <span class="warning"></span> -->
               </div>
             </div>
 
@@ -802,27 +802,8 @@ $('.modal#hadirTamu2 .kehadiran .btnsubmitjml').click(function(e) {
 
 
 <script type="text/javascript">
-// Tambahkan fungsi untuk meminta izin kamera
-async function requestCameraPermission() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ 
-      video: {
-        facingMode: "environment"
-      }
-    });
-    stream.getTracks().forEach(track => track.stop()); // Stop stream setelah mendapatkan izin
-    return true;
-  } catch (err) {
-    console.error('Error accessing camera:', err);
-    alert('Tidak dapat mengakses kamera. Pastikan Anda telah memberikan izin akses kamera di browser Anda.');
-    return false;
-  }
-}
-
 // Fungsi untuk menginisialisasi kamera
 async function initializeCamera() {
-  const hasPermission = await requestCameraPermission();
-  if (!hasPermission) return;
 
   // var arg = {
   //   resultFunction: function(result) {
@@ -880,9 +861,58 @@ async function initializeCamera() {
 
   function onScanSuccess(decodedText, decodedResult) {
       // Handle on success condition with the decoded text or result.
-      alert(`Scan result: ${decodedText}`, decodedResult);
+      // alert(`Scan result: ${decodedText}`, decodedResult);
       
-      html5QrcodeScanner.clear();
+      // html5QrcodeScanner.clear();
+
+      {
+        $.ajax({
+          url: "<?= base_url('home/chekcode') ?>",
+          type: "POST",
+          dataType: "JSON",
+          data: {
+            barcode: decodedText
+          },
+          cache: false,
+          success: function(respon) {
+            if (respon.kode == 1) {
+              $('.modal#modalWebcamHome').modal('hide');
+              $('.modal#hadirTamu2').modal('show');
+              $('.modal#hadirTamu2 input#nama').val(decodedText);
+              $('.modal#cariTamu2').modal('hide');
+              return false;
+            }
+            if (respon.kode == 3) {
+              $('.webcamQr span.warning').fadeIn();
+              $('.webcamQr span.warning').html('QrCode Salah, Ulangi.!');
+              $('.webcamQr span.warning').css('color', '#ff0000');
+
+              setTimeout(function() {
+                $('.webcamQr span.warning').fadeOut("slow");
+              }, 800);
+              return false;
+            }
+            if (respon.kode == 0) {
+              console.log('ok');
+              return false;
+            }
+            if (respon.kode == 2) {
+              $('.webcamQr span.warning').fadeIn();
+              $('.webcamQr span.warning').html('Tamu sudah Check-in');
+              $('.webcamQr span.warning').css('color', '#ffa52c');
+
+              setTimeout(function() {
+                $('.webcamQr span.warning').fadeOut("slow");
+              }, 800);
+
+              setTimeout(function() {
+                $('.modal#modalWebcamHome').modal('hide');
+              }, 3000);
+              return false;
+            }
+          }
+        });
+      }
   };
 
   try {
@@ -899,6 +929,9 @@ async function initializeCamera() {
     // });
 
     html5QrcodeScanner.render(onScanSuccess);
+
+    $('#html5-qrcode-select-camera').addClass('form-control mb-2');
+    $('#html5-qrcode-button-camera-stop').addClass('btn btn-danger btn-block');
   } catch (err) {
     console.error('Error initializing camera:', err);
     alert('Terjadi kesalahan saat menginisialisasi kamera. Silakan refresh halaman dan coba lagi.');
