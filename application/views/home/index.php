@@ -415,6 +415,51 @@
   border-bottom: solid #00ff7b 5px;
   border-right: solid #00ff7b 5px;
 }
+
+.html5-qrcode-element {
+  display: block;
+  width: 100%;
+  height: 2.875rem;
+  padding: 0.56rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #acb3b8;
+  background-color: #2A3038;
+  background-clip: padding-box;
+  border: 1px solid #2c2e33;
+  border-radius: 2px;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#html5-qrcode-button-camera-stop, #html5-qrcode-button-camera-start {
+  display: block;
+  width: 100%;
+  font-weight: 400;
+  color: #ffffff;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.9375rem;
+  line-height: 1;
+  border-radius: 0.1875rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+#html5-qrcode-button-camera-stop {
+  color: #fff;
+  background-color: #fc424a;
+  border-color: #fc424a;
+}
+
+#html5-qrcode-button-camera-start {
+  color: #fff;
+  background-color: #0090e7;
+  border-color: #0090e7;
+}
 </style>
 
 <!-- Modal APK-->
@@ -436,13 +481,13 @@
                 
                 
                 <!-- <canvas id="webcodecam-canvas"></canvas> -->
-                <!-- <div class="scanner-laser laser-rightBottom" style="opacity: 0.5;"></div>
-                <div class="scanner-laser laser-rightTop" style="opacity: 0.5;"></div>
-                <div class="scanner-laser laser-leftBottom" style="opacity: 0.5;"></div>
-                <div class="scanner-laser laser-leftTop" style="opacity: 0.5;"></div>
+                <!-- <div class="scanner-laser laser-rightBottom" style="opacity: 0.5;"></div> -->
+                <!-- <div class="scanner-laser laser-rightTop" style="opacity: 0.5;"></div> -->
+                <!-- <div class="scanner-laser laser-leftBottom" style="opacity: 0.5;"></div> -->
+                <!-- <div class="scanner-laser laser-leftTop" style="opacity: 0.5;"></div> -->
 
-                <span class="lbl">Scan Qrcode</span>
-                <span class="warning"></span> -->
+                <!-- <span class="lbl">Scan Qrcode</span> -->
+                <span class="warning"></span>
               </div>
             </div>
 
@@ -930,8 +975,11 @@ async function initializeCamera() {
 
     html5QrcodeScanner.render(onScanSuccess);
 
-    $('#html5-qrcode-select-camera').addClass('form-control mb-2');
-    $('#html5-qrcode-button-camera-stop').addClass('btn btn-danger btn-block');
+    setTimeout(function() {
+      $('#html5-qrcode-select-camera').addClass('form-control mb-2');
+      $('#html5-qrcode-button-camera-stop').addClass('btn btn-danger btn-block');
+    }, 800);
+
   } catch (err) {
     console.error('Error initializing camera:', err);
     alert('Terjadi kesalahan saat menginisialisasi kamera. Silakan refresh halaman dan coba lagi.');
