@@ -25,7 +25,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 
 
-$config['base_url'] = 'https://admin.daftartamu.id/';
+$config['base_url'] = 'https://dtfix.daftartamu.id/';
 
 /*
 |--------------------------------------------------------------------------
