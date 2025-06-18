@@ -106,6 +106,15 @@
           <div style="max-height: 350px;overflow-y: auto;" id="bodyCardListTamu">
             <div>
               <table class="table table-striped table-hover">
+                <thead>
+                  <tr>
+                    <th style="font-size: 12px;">No</th>
+                    <th style="font-size: 12px;">Nama</th>
+                    <th style="font-size: 12px;">Alamat</th>
+                    <th style="font-size: 12px;">Check-in</th>
+                    <th style="font-size: 12px; text-align: center;">Aksi</th>
+                  </tr>
+                </thead>
                 <tbody class="pageTamu">
                   <!-- LOAD -->
                 </tbody>
@@ -856,6 +865,63 @@ $('.modal#hadirTamu2 .kehadiran .btnsubmitjml').click(function(e) {
 
 
 <script type="text/javascript">
+// Fungsi untuk menghapus tamu
+$(document).on('click', '.btnHapusTamu', function() {
+  var id = $(this).data('id');
+  var nama = $(this).data('nama');
+  
+  if (confirm('Apakah Anda yakin ingin menghapus tamu "' + nama + '"?')) {
+    $.ajax({
+      url: "<?= base_url('home/hapusTamu') ?>",
+      type: "POST",
+      dataType: "JSON",
+      data: {
+        id: id
+      },
+      cache: false,
+      beforeSend: function() {
+        $('.btnHapusTamu[data-id="' + id + '"]').html('<i class="mdi mdi-spin mdi-rotate-right"></i>');
+        $('.btnHapusTamu[data-id="' + id + '"]').prop('disabled', true);
+      },
+      success: function(response) {
+        if (response.kode == 1) {
+          $.toast({
+            heading: 'Berhasil',
+            text: response.pesan,
+            showHideTransition: 'slide',
+            icon: 'success',
+            loaderBg: '#e834eb',
+            position: 'top-right'
+          });
+        } else {
+          $.toast({
+            heading: 'Gagal',
+            text: response.pesan,
+            showHideTransition: 'slide',
+            icon: 'error',
+            loaderBg: '#cccc10',
+            position: 'top-right'
+          });
+        }
+      },
+      error: function() {
+        $.toast({
+          heading: 'Error',
+          text: 'Terjadi kesalahan saat menghapus data',
+          showHideTransition: 'slide',
+          icon: 'error',
+          loaderBg: '#cccc10',
+          position: 'top-right'
+        });
+      },
+      complete: function() {
+        $('.btnHapusTamu[data-id="' + id + '"]').html('<i class="mdi mdi-delete"></i> Hapus');
+        $('.btnHapusTamu[data-id="' + id + '"]').prop('disabled', false);
+      }
+    });
+  }
+});
+
 // Fungsi untuk menginisialisasi kamera
 async function initializeCamera() {
 

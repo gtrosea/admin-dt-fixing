@@ -285,13 +285,50 @@ class Home extends CI_Controller
     $i = 1;
     foreach ($tamu as $key) {
       $data = '<tr>';
-      $data .= '</td><td style="font-size: 13px;">' . $i++ . '</td>';
-      $data .= '</td><td style="font-size: 13px;">' . $key['nama'] . '</td>';
-      $data .= '</td><td style="font-size: 13px;">' . $key['alamat'] . '</td>';
-      $data .= '</td><td style="font-size: 13px;">' . date('d/m/Y H:i:s', $key['hadir']) . '</td>';
+      $data .= '<td style="font-size: 13px;">' . $i++ . '</td>';
+      $data .= '<td style="font-size: 13px;">' . $key['nama'] . '</td>';
+      $data .= '<td style="font-size: 13px;">' . $key['alamat'] . '</td>';
+      $data .= '<td style="font-size: 13px;">' . date('d/m/Y H:i:s', $key['hadir']) . '</td>';
+      $data .= '<td style="font-size: 13px; text-align: center;">';
+      $data .= '<button class="btn btn-danger btn-sm btnHapusTamu" data-id="' . $key['id'] . '" data-nama="' . $key['nama'] . '">';
+      $data .= '<i class="mdi mdi-delete"></i> Hapus</button>';
+      $data .= '</td>';
       $data .= '</tr>';
       echo $data;
     }
+  }
+
+  public function hapusTamu()
+  {
+    $id = $this->input->post('id');
+    
+    // Get guest data before deletion
+    $tamu = $this->db->get_where('tamu', ['id' => $id])->row_array();
+    
+    if ($tamu) {
+      // Delete guest photo if not default
+      if ($tamu['poto'] !== 'tamu.jpg') {
+        if (file_exists(FCPATH . 'guestbook/assets/images/guest/' . $tamu['poto'])) {
+          unlink(FCPATH . 'guestbook/assets/images/guest/' . $tamu['poto']);
+        }
+      }
+      
+      // Delete QR code image if exists
+      if (file_exists(FCPATH . 'guestbook/assets/images/qr/' . $tamu['qr'] . '.png')) {
+        unlink(FCPATH . 'guestbook/assets/images/qr/' . $tamu['qr'] . '.png');
+      }
+      
+      // Delete from database
+      $this->db->where('id', $id)->delete('tamu');
+      
+      $json['kode'] = 1;
+      $json['pesan'] = 'Data tamu berhasil dihapus!';
+    } else {
+      $json['kode'] = 0;
+      $json['pesan'] = 'Data tamu tidak ditemukan!';
+    }
+    
+    echo json_encode($json);
   }
 
   public function jamNya()
