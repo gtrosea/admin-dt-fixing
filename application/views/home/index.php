@@ -112,7 +112,6 @@
                     <th style="font-size: 12px;">Nama</th>
                     <th style="font-size: 12px;">Alamat</th>
                     <th style="font-size: 12px;">Check-in</th>
-                    <th style="font-size: 12px; text-align: center;">Aksi</th>
                   </tr>
                 </thead>
                 <tbody class="pageTamu">
@@ -865,62 +864,6 @@ $('.modal#hadirTamu2 .kehadiran .btnsubmitjml').click(function(e) {
 
 
 <script type="text/javascript">
-// Fungsi untuk reset kehadiran tamu
-$(document).on('click', '.btnResetHadir', function() {
-  var id = $(this).data('id');
-  var nama = $(this).data('nama');
-  
-  if (confirm('Apakah Anda yakin ingin mereset status kehadiran tamu "' + nama + '"?')) {
-    $.ajax({
-      url: "<?= base_url('home/resetHadir') ?>",
-      type: "POST",
-      dataType: "JSON",
-      data: {
-        id: id
-      },
-      cache: false,
-      beforeSend: function() {
-        $('.btnResetHadir[data-id="' + id + '"]').html('<i class="mdi mdi-spin mdi-rotate-right"></i>');
-        $('.btnResetHadir[data-id="' + id + '"]').prop('disabled', true);
-      },
-      success: function(response) {
-        if (response.kode == 1) {
-          $.toast({
-            heading: 'Berhasil',
-            text: response.pesan,
-            showHideTransition: 'slide',
-            icon: 'success',
-            loaderBg: '#e834eb',
-            position: 'top-right'
-          });
-        } else {
-          $.toast({
-            heading: 'Gagal',
-            text: response.pesan,
-            showHideTransition: 'slide',
-            icon: 'error',
-            loaderBg: '#cccc10',
-            position: 'top-right'
-          });
-        }
-      },
-      error: function() {
-        $.toast({
-          heading: 'Error',
-          text: 'Terjadi kesalahan saat mereset status kehadiran',
-          showHideTransition: 'slide',
-          icon: 'error',
-          loaderBg: '#cccc10',
-          position: 'top-right'
-        });
-      },
-      complete: function() {
-        $('.btnResetHadir[data-id="' + id + '"]').html('<i class="mdi mdi-refresh"></i> Reset');
-        $('.btnResetHadir[data-id="' + id + '"]').prop('disabled', false);
-      }
-    });
-  }
-});
 
 // Fungsi untuk menginisialisasi kamera
 async function initializeCamera() {

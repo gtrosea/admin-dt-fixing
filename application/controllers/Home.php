@@ -289,10 +289,6 @@ class Home extends CI_Controller
       $data .= '<td style="font-size: 13px;">' . $key['nama'] . '</td>';
       $data .= '<td style="font-size: 13px;">' . $key['alamat'] . '</td>';
       $data .= '<td style="font-size: 13px;">' . date('d/m/Y H:i:s', $key['hadir']) . '</td>';
-      $data .= '<td style="font-size: 13px; text-align: center;">';
-      $data .= '<button class="btn btn-warning btn-sm btnResetHadir" data-id="' . $key['id'] . '" data-nama="' . $key['nama'] . '">';
-      $data .= '<i class="mdi mdi-refresh"></i> Reset</button>';
-      $data .= '</td>';
       $data .= '</tr>';
       echo $data;
     }
