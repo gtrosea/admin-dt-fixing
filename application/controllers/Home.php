@@ -290,39 +290,32 @@ class Home extends CI_Controller
       $data .= '<td style="font-size: 13px;">' . $key['alamat'] . '</td>';
       $data .= '<td style="font-size: 13px;">' . date('d/m/Y H:i:s', $key['hadir']) . '</td>';
       $data .= '<td style="font-size: 13px; text-align: center;">';
-      $data .= '<button class="btn btn-danger btn-sm btnHapusTamu" data-id="' . $key['id'] . '" data-nama="' . $key['nama'] . '">';
-      $data .= '<i class="mdi mdi-delete"></i> Hapus</button>';
+      $data .= '<button class="btn btn-warning btn-sm btnResetHadir" data-id="' . $key['id'] . '" data-nama="' . $key['nama'] . '">';
+      $data .= '<i class="mdi mdi-refresh"></i> Reset</button>';
       $data .= '</td>';
       $data .= '</tr>';
       echo $data;
     }
   }
 
-  public function hapusTamu()
+  public function resetHadir()
   {
     $id = $this->input->post('id');
     
-    // Get guest data before deletion
+    // Get guest data before reset
     $tamu = $this->db->get_where('tamu', ['id' => $id])->row_array();
     
     if ($tamu) {
-      // Delete guest photo if not default
-      if ($tamu['poto'] !== 'tamu.jpg') {
-        if (file_exists(FCPATH . 'guestbook/assets/images/guest/' . $tamu['poto'])) {
-          unlink(FCPATH . 'guestbook/assets/images/guest/' . $tamu['poto']);
-        }
-      }
-      
-      // Delete QR code image if exists
-      if (file_exists(FCPATH . 'guestbook/assets/images/qr/' . $tamu['qr'] . '.png')) {
-        unlink(FCPATH . 'guestbook/assets/images/qr/' . $tamu['qr'] . '.png');
-      }
-      
-      // Delete from database
-      $this->db->where('id', $id)->delete('tamu');
+      // Reset attendance status to 0
+      $this->db->set([
+        'hadir' => 0,
+        'sapa' => 0,
+        'timer' => 0,
+        'kehadiran' => 0
+      ])->where('id', $id)->update('tamu');
       
       $json['kode'] = 1;
-      $json['pesan'] = 'Data tamu berhasil dihapus!';
+      $json['pesan'] = 'Status kehadiran tamu berhasil direset!';
     } else {
       $json['kode'] = 0;
       $json['pesan'] = 'Data tamu tidak ditemukan!';

@@ -865,14 +865,14 @@ $('.modal#hadirTamu2 .kehadiran .btnsubmitjml').click(function(e) {
 
 
 <script type="text/javascript">
-// Fungsi untuk menghapus tamu
-$(document).on('click', '.btnHapusTamu', function() {
+// Fungsi untuk reset kehadiran tamu
+$(document).on('click', '.btnResetHadir', function() {
   var id = $(this).data('id');
   var nama = $(this).data('nama');
   
-  if (confirm('Apakah Anda yakin ingin menghapus tamu "' + nama + '"?')) {
+  if (confirm('Apakah Anda yakin ingin mereset status kehadiran tamu "' + nama + '"?')) {
     $.ajax({
-      url: "<?= base_url('home/hapusTamu') ?>",
+      url: "<?= base_url('home/resetHadir') ?>",
       type: "POST",
       dataType: "JSON",
       data: {
@@ -880,8 +880,8 @@ $(document).on('click', '.btnHapusTamu', function() {
       },
       cache: false,
       beforeSend: function() {
-        $('.btnHapusTamu[data-id="' + id + '"]').html('<i class="mdi mdi-spin mdi-rotate-right"></i>');
-        $('.btnHapusTamu[data-id="' + id + '"]').prop('disabled', true);
+        $('.btnResetHadir[data-id="' + id + '"]').html('<i class="mdi mdi-spin mdi-rotate-right"></i>');
+        $('.btnResetHadir[data-id="' + id + '"]').prop('disabled', true);
       },
       success: function(response) {
         if (response.kode == 1) {
@@ -907,7 +907,7 @@ $(document).on('click', '.btnHapusTamu', function() {
       error: function() {
         $.toast({
           heading: 'Error',
-          text: 'Terjadi kesalahan saat menghapus data',
+          text: 'Terjadi kesalahan saat mereset status kehadiran',
           showHideTransition: 'slide',
           icon: 'error',
           loaderBg: '#cccc10',
@@ -915,8 +915,8 @@ $(document).on('click', '.btnHapusTamu', function() {
         });
       },
       complete: function() {
-        $('.btnHapusTamu[data-id="' + id + '"]').html('<i class="mdi mdi-delete"></i> Hapus');
-        $('.btnHapusTamu[data-id="' + id + '"]').prop('disabled', false);
+        $('.btnResetHadir[data-id="' + id + '"]').html('<i class="mdi mdi-refresh"></i> Reset');
+        $('.btnResetHadir[data-id="' + id + '"]').prop('disabled', false);
       }
     });
   }
