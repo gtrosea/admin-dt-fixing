@@ -122,6 +122,13 @@ class Tamu extends CI_Controller
       } else {
         $row[] = date('d/m/Y H:i:s', $key['hadir']);
       }
+      
+      // Add reset button for guests who have checked in
+      if ($key['hadir'] > 0) {
+        $row[] = '<button class="btn btn-warning btn-sm btnResetHadir" data-id="' . $key['id'] . '" data-nama="' . $key['nama'] . '"><i class="mdi mdi-refresh"></i> Reset</button>';
+      } else {
+        $row[] = '<span class="text-muted">-</span>';
+      }
 
       $data[] = $row;
     }
@@ -188,5 +195,31 @@ class Tamu extends CI_Controller
     $img = $path . $tamu['poto'];
 
     force_download($id . '-' . $tamu['nama'] . '.jpg', file_get_contents($img));
+  }
+
+  public function resetHadir()
+  {
+    $id = $this->input->post('id');
+    
+    // Get guest data before reset
+    $tamu = $this->db->get_where('tamu', ['id' => $id])->row_array();
+    
+    if ($tamu) {
+      // Reset attendance status to 0
+      $this->db->set([
+        'hadir' => 0,
+        'sapa' => 0,
+        'timer' => 0,
+        'kehadiran' => 0
+      ])->where('id', $id)->update('tamu');
+      
+      $json['kode'] = 1;
+      $json['pesan'] = 'Status kehadiran tamu berhasil direset!';
+    } else {
+      $json['kode'] = 0;
+      $json['pesan'] = 'Data tamu tidak ditemukan!';
+    }
+    
+    echo json_encode($json);
   }
 }
